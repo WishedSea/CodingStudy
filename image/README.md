@@ -3,6 +3,6 @@
 ```
 YYMMDD_NNN_COMMENT
 ```
-YYMMDD : 생성한 파일의 날짜
-NNN : 생성한 파일의 번호
+YYMMDD : 생성한 파일의 날짜<br>
+NNN : 생성한 파일의 번호<br>
 COMMENT : 간단한 설명
