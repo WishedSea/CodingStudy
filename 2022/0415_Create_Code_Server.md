@@ -16,7 +16,7 @@
 AWS(Amazon Web Servie)가 가입 후 1년간 무료라는 소식을 접하고 AWS에 Code-server를 설치하여  
 운용해보려 한다.
 
-### 환경
+### 컴퓨터 환경
 사이버지식정보방은 다음과 같은 환경을 가지고 있다.
 - 매 부팅시 서버에 저장된 초기값으로 부팅이 되는 MaestroWeb 에이전트
 - 실행창을 띄우지 못함 (필자의 경우 윈도우에서 실행창을 이용하는 경우가 많았다.)
@@ -49,12 +49,36 @@ AWS(Amazon Web Servie)가 가입 후 1년간 무료라는 소식을 접하고 AW
   - SaaS (Software as a Service)
     - 소프트웨어 또는 애플리케이션의 기능만 제공
 
+### AWS환경
+- OS : Ubuntu 20.14 LTS
+- 키 페어 없이 진행
+- Nginx를 통해 IP만을 통해 IDE에 접근
+- 권장은 1GB RAM, 2CPUs 이지만 **무료인 1GB RAM, 1CPU를 사용하였다.**
+
 ### AWS인스턴스 생성
 1. 메인화면에 솔루션 구축에서 가상 머신 사용을 클릭한다.  
 ![startVM](/image/20220415_002_StartVM.png)
+2. 서버명 설정, OS 이미지 선택
+  - 이름 : 자신이 원하는 이름
+  - 애플리케이션 및 OS 이미지(Amazon Machine Image) : Ubuntu
+  ![VMImage](/image/20220415_003_VMImage.png)
+3. 키 페어(로그인) : 키 페어 없이 계속 진행(권장되지 않음)
+4. 네트워크 설정 : 인터넷에서 HTTPs 트래픽 허용 추가 선택
+  ![NetSet](/image/20220415_004_NetSet.png)
+5. 그 외에는 기본설정으로 진행하였다.
+6. 인스턴스 시작
+
+### Code-server 설치
 
 
+### Nginx 설치
 
+
+### 맺으며
+필자는 원래 VSCode를 사용해 본적이 없다.  
+주로 사용하던 IDE는 Spyder를 주로 사용하였고 그 마저도 없으면 Notepad++프로그램을 사용하였다.
+익숙해 지는데 오래 걸릴지 모르지만 전역하는 그 날까지 계속해서 감을 잃지 않도록 노력해볼 계획이다.
 
 ### 참고
 AWS란? https://goddaehee.tistory.com/174
+Code-server 설치 https://github.com/coder/code-server
