@@ -57,28 +57,79 @@ AWS(Amazon Web Servie)가 가입 후 1년간 무료라는 소식을 접하고 AW
 
 ### AWS인스턴스 생성
 1. 메인화면에 솔루션 구축에서 가상 머신 사용을 클릭한다.  
-![startVM](/image/20220415_002_StartVM.png)
+![startVM](/image/220415_002_StartVM.png)
 2. 서버명 설정, OS 이미지 선택
   - 이름 : 자신이 원하는 이름
   - 애플리케이션 및 OS 이미지(Amazon Machine Image) : Ubuntu
-  ![VMImage](/image/20220415_003_VMImage.png)
+  ![VMImage](/image/220415_003_VMImage.png)
 3. 키 페어(로그인) : 키 페어 없이 계속 진행(권장되지 않음)
 4. 네트워크 설정 : 인터넷에서 HTTPs 트래픽 허용 추가 선택
-  ![NetSet](/image/20220415_004_NetSet.png)
+  ![NetSet](/image/220415_004_NetSet.png)
 5. 그 외에는 기본설정으로 진행하였다.
 6. 인스턴스 시작
 
 ### Code-server 설치
-
+1. 인스턴스 생성을 정상적으로 마쳤다면 다음과 같이 앞에서 만든 인스턴스가 실행중일 것이다.
+  ![InstanceList](/image/220415_005_InstanceList.png) 
+2. 생성한 인스턴스를 체크하고 연결버튼을 눌러 기본 사용자 이름인 ubuntu로 연결한다.
+3. Code-server를 설치한다.
+```
+curl -fsSL https://code-server.dev/install.sh | sh
+```
+4. 인스턴스가 부팅이 될때 자동으로 켜질 수 있도록 등록한다.
+```
+sudo systemctl enable --now code-server@$USER
+```
+5. 위 명령어까지 실행하게 되면 Code-server는 동작중이지만 웹에서의 접근이 불가능한데 이는 localhost의 접속만 허용하기 때문이다. 외부에서 접속이 가능할 수 있도록 Nginx를 이용하여 설정하려 한다.
+6. IDE 페이지 비밀번호 변경은 ~/.config/code-server/config.yaml에서 가능하다.
+  - password: [사용할 비밀번호 입력]
+```
+sudo vi ~/.config/code-server/config.yaml
+```
 
 ### Nginx 설치
+1. Nginx를 설치한다.
+```bash
+sudo apt-get install nginx -y
+```
+2. /etc/nginx/sites-available/code-server 파일에 아래 설정 추가 (sudo 권한 필요)
+```bash
+server {
+    listen 80;
+    listen [::]:80;
 
+    location / {
+      proxy_pass http://localhost:8080/;
+      proxy_set_header Host $host;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection upgrade;
+      proxy_set_header Accept-Encoding gzip;
+    }
+}
+```
+3. 설정 적용
+```
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s ../sites-available/code-server /etc/nginx/sites-enabled/code-server
+sudo systemctl reload nginx.service
+```
+설정이 제대로 적용되었다면 이후부터는 퍼블릭 IP 주소만을 입력하여 접근할 수 있다.
+![VScodePage](/image/220415_006_VScodePage.png)
+
+### Code-server 업데이트
+업데이트는 설치때 사용한 명령어와 동일하다.
+```bash
+curl -fsSL https://code-server.dev/install.sh | sh
+```
 
 ### 맺으며
 필자는 원래 VSCode를 사용해 본적이 없다.  
 주로 사용하던 IDE는 Spyder를 주로 사용하였고 그 마저도 없으면 Notepad++프로그램을 사용하였다.
-익숙해 지는데 오래 걸릴지 모르지만 전역하는 그 날까지 계속해서 감을 잃지 않도록 노력해볼 계획이다.
+익숙해 지는데 오래 걸릴지 모르지만 전역하는 그 날까지 계속해서 감을 잃지 않도록 노력해볼 계획이다.  
+또한 아직 마크다운 문법에 대해 숙련도가 부족해 가독성이 부족할 수 있다.  
+이를 극복하기 위해 열심히 계속해서 공부할 것이다.
 
 ### 참고
 AWS란? https://goddaehee.tistory.com/174
 Code-server 설치 https://github.com/coder/code-server
+
