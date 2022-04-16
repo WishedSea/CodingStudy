@@ -34,6 +34,8 @@ def S3(s2): #조건 3. '.' 이 여러개가 연속될 수 없음
     return arrS3
 
 def S4(s3): #조건 4. '.'은 처음과 끝에 올 수 없음
+  return s3.strip('.')
+"""
     while(True):
         if s3[0] == '.':
             s3 = s3[1:]
@@ -41,6 +43,7 @@ def S4(s3): #조건 4. '.'은 처음과 끝에 올 수 없음
             break
         if len(s3) == 0:
             return ''
+"""
 
     while(True):
         if s3[-1] == '.':
@@ -59,12 +62,15 @@ def S5(s4): #조건 5. 공백이라면 'a' 추가
 def S6(s5): #조건 6. 15자 이하, '.'은 끝에 올 수 없음
     if len(s5) >= 16:
         s5 = s5[:15]
+    return s5.rstrip('.')
+"""
     while(True):
         if s5[-1] == '.':
             s5 = s5[:-1]
         else:
             break
     return s5
+"""
 
 def S7(s6): #조건 7. 3글자 이하라면 마지막 자리에 있는 글자를 3글자가 될때까지 추가
     if 2 >= len(s6):
