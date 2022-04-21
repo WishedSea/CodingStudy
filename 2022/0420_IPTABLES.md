@@ -2,11 +2,8 @@
 > - 리눅스상에서 방화벽을 설정하는 도구
 > - 커널 2.4 이전 버전에서 사용되던 IPCHAINS를 대신하는 도구
 > - 커널상에서 netfilter 패킷필터링 기능을 사용자 공간에서 제어하는 수준으로 사용가능
-> ### IP CHAIN 구성도(사진 클릭시 새창에서 출처로 이동)
-> <a href='https://webterror.net/2015/02/11/1622/' target='_blank'>
->  <img src='https://webterror.net/wp-content/uploads/2015/02/IP_CHANE_%EA%B5%AC%EC%84%B1%EB%8F%84-1024x688.jpg' alt="IP CAHIN 구성도">
-> </a>
-> 
+> ### IP CHAIN 구성도
+>  ![IP CHAIN 구성도]('https://webterror.net/wp-content/uploads/2015/02/IP_CHANE_%EA%B5%AC%EC%84%B1%EB%8F%84-1024x688.jpg')
 > ### 패킷필터링이란?
 >> 지나가는 패킷의 헤더를 보고 그 전체 패킷을 어떻게 처리할지 결정하는 것
 > ### IPTABLES 관련 명령어
@@ -149,8 +146,76 @@
 >> 
 > ### iptables 출력
 > ### 예문
+>> #### DNS 서버 허용
+>> ```bash
+>> iptables -A INPUT -p tcp --dport 53 -j ACCEPT # tcp 53번 포트 허용
+>> iptables -A INPUT -p udp --dport 53 -j ACCEPT # udp 53번 포트 허용
+>> #### NULL 패킷 차단
+>> ```bash
+>> iptables -A INPUT -p tcp --tcp-flags ALL NONE -j DROP # tcp프로토콜로 들어오는 패킷 전체가 NONE(NULL) 값으로 매칭되는 패킷은 DROP한다.
+>> ```
+>> #### SYN-FLOOD 공격 차단
+>> ```bash
+>> iptables -A INPUT -P tcp ! --syn -m state -state NEW -j DROP
+>> ```
+>> /etc/sysctl.conf를 수정하여 차단가능
+>> ```bash
+>> net.ipv4.tcp_syncookies = 1 
+>> net.ipv4.conf.all.rp_filter = 1 
+>> net.ipv4.conf.default.rp_filter = 1 
+>> net.ipv4.tcp_max_syn_backlog = 8192 
+>> net.ipv4.netfilter.ip_conntrack_max = 1048576
+>> ```
+>> #### XMAS 패킷 차단
+>> ```bash
+>> iptables -A INPUT -p tcp --tcp-flags ALL ALL -j DROP # tcp 프로토콜로 들어오는 모든 패킷이 모든 방식으로 들어올 경우 차단한다.
+>> ```
+>> #### 기타 사용법
+>> ```bash 
+>> iptables -nL --line-number                          # 실행 순번 확인
+>> iptalbes -R INPUT 3 -p tcp --DPORT 2222 -j ACCEPT   # 순번 3의 행을 R(replace) 수정
+>> iptables -A INPUT -i lo -j ACCEPT                   # loopback interface 모든 패킷 허용
+>> iptables -A INPUT -i eth0 -j ACCEPT                 # eth0 interface 모든 패킷 허용
+>> iptables -A INPUT -s 192.168.0.1 -j ACCEPT          # 192.168.0.1에 대해 모든 패킷 허용
+>> iptables -A INPUT -s 192.168.0.0/24 -j ACCEPT       # 192.168.0.0 대역대에 대해 모든 패킷 허용(prifix대신 subnet mask값 적어도 됨)
+>> # 신뢰하는 IP(192.168.0.1)와 MAC주소(00:00:00:00:00:00)에 대해 모든 패킷 허용
+>> iptables -A INPUT -s 192.168.0.1 -m mac --mac-source 00:00:00:00:00:00 -j ACCEPT
+>> iptables -A INPUT -p tcp -dport 1024:2048 -j ACCEPT # tcp 1024~2048포트에 대해 모든 패킷 허용
+>> ```
+>> 
+>> #### 자동화 스크립트 (자주 수정하는경우 기본 설정으로 짜둘 수 있음)
+>> ```bash
+>> #!/bin/bash
+>> # iptables 설정 자동화 스크립트
+>> # 모든 Chain 정책 삭제
+>> iptables -F
+>> 
+>> TCP 포트 22번을 SSH 접속을 위해 허용(원격 접속을 허용하기 위해 제일 먼저 설정)
+>> iptables -A INPUT -p tcp -m tcp -dport 22 -j ACCEPT
+>> 
+>> # 기본 정책 설정
+>> iptables -P INPUT DROP
+>> iptables -P FORWARD DROP
+>> iptables -P OUTPUT ACCEPT
+>> 
+>> # localhost 접속 허용
+>> iptables -A INPUT -i lo -j ACCEPT
+>>
+>> established and relate 접속을 허용
+>> iptables -A INPUT -m status --status ESTABLISHED,RELATE -j ACCEPT
+>> 
+>> # 80번 Apache포트 허용
+>> iptables -A INPUT -p tcp -m tcp -dport 80 -j ACCEPT
+>> 
+>> # 설정 저장
+>> /sbin/service iptables save
+>> 
+>> # 설정 내용 출력
+>> iptables -L -v
+>> ```
+
 
 #### 출처 
+> [IP Chain 구성도](https://webterror.net/2015/02/11/1622/)
 > [[CentOS] 방화벽 설정 - iptables](https://webdir.tistory.com/170)
 > [PREROUTING과 POSTROUTING](http://forum.falinux.com/zbxe/index.php?mid=lecture_tip&document_srl=872809)
-> 
