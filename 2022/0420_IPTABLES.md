@@ -3,7 +3,7 @@
 > - 커널 2.4 이전 버전에서 사용되던 IPCHAINS를 대신하는 도구
 > - 커널상에서 netfilter 패킷필터링 기능을 사용자 공간에서 제어하는 수준으로 사용가능
 > ### IP CHAIN 구성도
->  ![IP CHAIN 구성도]('https://webterror.net/wp-content/uploads/2015/02/IP_CHANE_%EA%B5%AC%EC%84%B1%EB%8F%84-1024x688.jpg')
+>  ![IP CHAIN 구성도]('/image/220421_001_ipchain_bp.png')
 > ### 패킷필터링이란?
 >> 지나가는 패킷의 헤더를 보고 그 전체 패킷을 어떻게 처리할지 결정하는 것
 > ### IPTABLES 관련 명령어
@@ -216,6 +216,6 @@
 
 
 #### 출처 
-> [IP Chain 구성도](https://webterror.net/2015/02/11/1622/)
-> [[CentOS] 방화벽 설정 - iptables](https://webdir.tistory.com/170)
+> [IP Chain 구성도](https://webterror.net/2015/02/11/1622/)  
+> [[CentOS] 방화벽 설정 - iptables](https://webdir.tistory.com/170)  
 > [PREROUTING과 POSTROUTING](http://forum.falinux.com/zbxe/index.php?mid=lecture_tip&document_srl=872809)
