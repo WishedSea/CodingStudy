@@ -2,6 +2,11 @@
 > - 리눅스상에서 방화벽을 설정하는 도구
 > - 커널 2.4 이전 버전에서 사용되던 IPCHAINS를 대신하는 도구
 > - 커널상에서 netfilter 패킷필터링 기능을 사용자 공간에서 제어하는 수준으로 사용가능
+> ### IP CHAIN 구성도(사진 클릭시 새창에서 출처로 이동)
+> <a href='https://webterror.net/2015/02/11/1622/' target='_blank'>
+>  <img src='https://webterror.net/wp-content/uploads/2015/02/IP_CHANE_%EA%B5%AC%EC%84%B1%EB%8F%84-1024x688.jpg' alt="IP CAHIN 구성도">
+> </a>
+> 
 > ### 패킷필터링이란?
 >> 지나가는 패킷의 헤더를 보고 그 전체 패킷을 어떻게 처리할지 결정하는 것
 > ### IPTABLES 관련 명령어
@@ -28,7 +33,7 @@
 >>  </tr>
 >>  <tr>
 >>    <td>filter</td>
->>    <td>net</td>
+>>    <td>nat</td>
 >>    <td>mangle</td>
 >>    <td>raw</td>
 >>  </tr>
@@ -74,6 +79,11 @@
 >> |INPUT|<ul><li>패킷필터링 및 방화벽 관련 정책들을 설정하는 사슬</li><li>실제적인 접근 통제를 담당하는 역할을 수행</li><li>커널 내부에서 라우팅 계산을 마친 후 로컬 리눅스 시스템이 목적지인 패킷에 적용한다.</li></ul>|
 >> |OUTPUT|<ul><li>다른 시스템으로의 접근을 차단할 때 사용하는 사슬</li><li>리눅스 시스템 자체가 생성하는 패킷을 제어하는 사슬</li></ul>|
 >> |FORWARD|<ul><li>리눅스 시스템을 통과하는 패킷을 관리하는 사슬</li><li>한 네트워크를 다른 네트워크와 연결하기 위해 iptables의 방화벽을 사용해서 두 네트워크 간의 패킷이 방화벽을 통과하는 경우에 사용</li><li>NAT 기반으로 하나의 공인 IP를 사용하는 시스템의 접근 제어 정책을 설정할때 사용</li></ul>|
+> ### NAT(Network Address Translation) 테이블의 사슬(Chain) 종류
+>> |사슬(Chain)|기능|
+>> |---|---|
+>> |PREROUTING|DNAT(Destination NAT) => 외부 공인 IP를 내부 사설 IP로|
+>> |POSTROUTING|SNAT(Source NAT) => 내부 사설 IP를 외부 공인 IP로|
 > ### 매치 옵션
 >> 패킷을 처리할 때 만족해야 하는 조건을 가르킴 => 이 조건을 만족시키는 패킷들만 규칙을 적용
 >> |옵션|설명|
@@ -130,6 +140,17 @@
 >> |-X (--delete-chain)|chain 삭제|
 >> |-P (--policy)|기본정책 변경|
 > ### 기본 동작
+>> 1. 패킷에 대한 동작은 위에서부터 차례대로 각 규칙에 대해 검사 후 그 규칙과 일치하는 패킷에 대하여 타겟에 지정한 ACCEPT, DROP 등을 수행
+>> 2. 규칙이 일치하고 작업이 수행되면, 그 패킷은 해당 규칙의 결과에 따라 처리하고 체인에서 추가 규칙을 무시
+>> 3. 패킷이 체인의 모든 규칙과 매치하지 않아 규칙의 바닥에 도달하면 정해진 기본정책 수행
+>> 4. 기본 정책은 policy ACCEPT, policy DROP으로 설정 가능
+>>
+>> 일반적인 기본 policy는 DROP으로 설정하고 특별히 지정된 포트와 IP주소등에 대해 ACCEPT를 수행
 >> 
 > ### iptables 출력
 > ### 예문
+
+#### 출처 
+> [[CentOS] 방화벽 설정 - iptables](https://webdir.tistory.com/170)
+> [PREROUTING과 POSTROUTING](http://forum.falinux.com/zbxe/index.php?mid=lecture_tip&document_srl=872809)
+> 
