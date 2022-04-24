@@ -38,10 +38,10 @@
 >> cups options = raw                
 >> 
 >> [homes]                          # 각 사용자들이 자신의 홈 디렉터리로 접근할 때의 권한을 설정하는 섹션
->> comment = Home Directories       #
->> valid users = %S, %D%w%S         #
->> browseable = No                  #
->> read only = No                   #
+>> comment = Home Directories       # 간단한 설명
+>> valid users = %S, %D%w%S         # 
+>> browseable = No                  # 공유이름을 브라우저에 표시할 수 있게 하는 기능
+>> read only = No                   # 쓰기설정
 >> inherit acls = Yes               #
 >> 
 >> [printers]                       # 프린터 관련 권한을 설정하는 섹션
