@@ -1,7 +1,7 @@
 ### SAMBA
 > Windows 운영체제를 사용하는 PC에서 Linux 또는 UNIX 서버에 접속하여 파일이나 프린터를 공유하여 사용할 수 있도록 해주는 소프트웨어  
 > #### 설치 명령어
->> ```bashm
+>> ```bash
 >> ~$ sudo yum install samba
 >> ~$ sudo yum install samba-common
 >> ~$ sudo yum install samba-client
@@ -39,10 +39,10 @@
 >> 
 >> [homes]                          # 각 사용자들이 자신의 홈 디렉터리로 접근할 때의 권한을 설정하는 섹션
 >> comment = Home Directories       # 간단한 설명
->> valid users = %S, %D%w%S         # 
+>> valid users = %S, %D%w%S         # 허용 유저 목록
 >> browseable = No                  # 공유이름을 브라우저에 표시할 수 있게 하는 기능
 >> read only = No                   # 쓰기설정
->> inherit acls = Yes               #
+>> inherit acls = Yes               # Inheritance ACLs? (ACLs 상속?) 좀더 찾아볼것
 >> 
 >> [printers]                       # 프린터 관련 권한을 설정하는 섹션
 >> comment = All Printers           
@@ -59,3 +59,12 @@
 >> create mask = 0664               
 >> directory mask = 0775            
 >> ```
+>> 
+> #### SMBCLIENT
+>> 리눅스 및 유닉스에서 사용하는 삼바 클라이언트 명령으로 윈도 서버로 접근할 때 사용된다.
+>> ```bash
+>> ~$ smbclinet -L localhost
+>> ````
+>> 
+### SAMBA는 실제로 문제를 풀어보며 공부를 해야할것 같다. 설치된 버전과 명령어가 잘 안맞는 것 같다.
+
