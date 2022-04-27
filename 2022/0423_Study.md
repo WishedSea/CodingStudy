@@ -26,8 +26,7 @@
 > 
 > ```python3
 > def solution(numbers):
->   def solution(numbers):
->     return str(int(''.join(s for s in sorted(map(str, numbers), key=lambda x: x*3, reverse=True))))
+>   return str(int(''.join(s for s in sorted(map(str, numbers), key=lambda x: x*3, reverse=True))))
 > ```
 > #### 풀이 설명
 >> 입력값이 [9, 99, 999, 90, 990, 900]일때 문자열로 치완후 3회 반복했을때 문자열로 정렬이 되기 때문에 ['9', '99', '999', '990, '90', '900']으로 정렬된다.  
